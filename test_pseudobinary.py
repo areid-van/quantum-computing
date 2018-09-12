@@ -1,4 +1,5 @@
 from pseudobinary import PBP
+import dimod
 
 class TestClass(object):
     def test_substitute(self):
@@ -23,3 +24,17 @@ class TestClass(object):
         x = PBP(0,-1) + PBP(1) + PBP(2)
         y = PBP() + PBP(2,-1)
         assert x.solvefor(1) == y
+        
+    def test_toquadratic(self):
+        x = PBP(1,-1) + PBP(2, -1) + PBP(3, -1) + PBP(1, 2)*PBP(2) + PBP(1, 2)*PBP(3) + PBP(2, 2)*PBP(3) + PBP(1, 6)*PBP(2)*PBP(3)
+        y = PBP(1,-1.) + PBP(2,-1.) + PBP(1,8.)*PBP(2) + PBP(3,-1.) + PBP(1,8.)*PBP(3) + PBP(2,8.)*PBP(3) + PBP(4,6.) + PBP(1,-6.)*PBP(4) + PBP(2,-6.)*PBP(4) + PBP(3,-6.)*PBP(4)
+        print(x.toQuadratic())
+        print(y)
+        assert y == x.toQuadratic()
+        
+    def test_tobqm(self):
+        x = PBP(1,-1.) + PBP(2,-1.) + PBP(1,8.)*PBP(2) + PBP(3,-1.) + PBP(1,8.)*PBP(3) + PBP(2,8.)*PBP(3) + PBP(4,6.) + PBP(1,-6.)*PBP(4) + PBP(2,-6.)*PBP(4) + PBP(3,-6.)*PBP(4)
+        lin = {4: 6.0, 1: -1.0, 2: -1.0, 3: -1.0}
+        quad = {(1, 4): -6.0, (2, 4): -6.0, (3, 4): -6.0, (1, 2): 8.0, (1, 3): 8.0, (2, 3): 8.0}
+        y = dimod.BinaryQuadraticModel(lin, quad, 0, dimod.BINARY)
+        assert x.toBQM() == y
