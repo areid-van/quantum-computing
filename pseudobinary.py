@@ -91,6 +91,7 @@ class PBP(object):
         return f
         
     def degree(self):
+        if len(self.d) == 0: return 0
         return max([popcount(x) for x in self.d])
     
     def varmask(self):
@@ -106,6 +107,11 @@ class PBP(object):
         
     def hasvar(self, var):
         return (self.varmask() & (1<<(var-1))) > 0
+    
+    def iszero(self):
+        if len(self.d) == 0: return True
+        if len(self.d) == 1 and (0 in self.d) and self.d[0]==0: return True
+        return False
         
     def toBQM(self):
         if self.degree() > 2: raise ValueError("Degree of polynomial is greater than 2.")
@@ -150,7 +156,9 @@ class PBP(object):
             if v == target:
                 divisor = c
             else:
-                result += PBP(v,-c)
+                x = PBP(0,0)
+                x.d[v] = -c
+                result += x
                 
         if divisor != 1:
             for v,c in result.d.items(): result.d[v] /= divisor

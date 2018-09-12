@@ -21,9 +21,12 @@ class TestClass(object):
         assert x.variables() == [1,4,9]
         
     def test_solvefor(self):
-        x = PBP(0,-1) + PBP(1) + PBP(2)
-        y = PBP() + PBP(2,-1)
-        assert x.solvefor(1) == y
+        x = PBP(0,-1) + PBP(13) + PBP(14)
+        y = PBP() + PBP(14,-1)
+        z = x.solvefor(13)
+        print(z)
+        print(y)
+        assert  z == y
         
     def test_toquadratic(self):
         x = PBP(1,-1) + PBP(2, -1) + PBP(3, -1) + PBP(1, 2)*PBP(2) + PBP(1, 2)*PBP(3) + PBP(2, 2)*PBP(3) + PBP(1, 6)*PBP(2)*PBP(3)
@@ -38,3 +41,19 @@ class TestClass(object):
         quad = {(1, 4): -6.0, (2, 4): -6.0, (3, 4): -6.0, (1, 2): 8.0, (1, 3): 8.0, (2, 3): 8.0}
         y = dimod.BinaryQuadraticModel(lin, quad, 0, dimod.BINARY)
         assert x.toBQM() == y
+
+    def test_degree1(self):
+        x = PBP(0,0)
+        x.trim()
+        assert x.degree() == 0
+        
+    def test_degree2(self):
+        x = PBP(15)*PBP(2)
+        x.trim()
+        assert x.degree() == 2
+            
+    def test_iszero(self):
+        x = PBP(0,0)
+        assert x.iszero()
+        x.d.clear()
+        assert x.iszero()
