@@ -30,6 +30,9 @@ int main(int, char**)
     int maxVar = -1;
     PBF<double> pbf;
 
+    int mode;
+    cin >> mode;
+    
     while(!cin.eof())
     {
       int nvar;
@@ -67,8 +70,22 @@ int main(int, char**)
 
     }
 
-  	PBF<double> qpbf;
-    pbf.toQuadratic(qpbf, maxVar+1);
+    PBF<double> qpbf;
+    if (mode == 0)
+    {
+        pbf.reduceHigher(); // Use the ELC technique to reduce higher-order terms without auxiliary variables
+        pbf.toQuadratic(qpbf, maxVar+1); // Reduce the remaining higher-order terms using HOCR adding auxiliary variables
+    }
+    else if (mode == 1)
+    {
+        qpbf = pbf;
+        qpbf.reduceHigherApprox(); // Use the approximate ELC technique to reduce higher-order terms without auxiliary variables
+    }
+    else if (mode == 2)
+    {
+        pbf.toQuadratic(qpbf, maxVar+1); // Reduce to Quadratic pseudo-Boolean function using HOCR.
+    }
+
     cout << qpbf << endl;
     return 0;
 }

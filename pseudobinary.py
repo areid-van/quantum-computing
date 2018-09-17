@@ -53,10 +53,16 @@ class PBP(object):
     
     def trim(self, threshold=0):
         self.d = {k:v for k,v in self.d.items() if abs(v) > threshold}
+    
+    def const(self):
+        return self.d.get(0,0)
+
+    def coeff(self, var):
+        return self.d.get(1<<(var-1), 0)
         
-    def toQuadratic(self):
+    def toQuadratic(self, mode=2):
         #serialize
-        txt = ''
+        txt = '%d' % mode
         for k,v in self.d.items():
             bit = 0
             bits = list()

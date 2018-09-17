@@ -57,3 +57,15 @@ class TestClass(object):
         assert x.iszero()
         x.d.clear()
         assert x.iszero()
+        
+    def test_const(self):
+        x = PBP(0,3)
+        assert x.const() == 3
+        x.d.clear()
+        assert x.const() == 0
+        
+    def test_coeff(self):
+        x = PBP(5,3)
+        assert x.coeff(5) == 3
+        x.d.clear()
+        assert x.coeff(4) == 0
